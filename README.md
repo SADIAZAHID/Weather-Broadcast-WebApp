@@ -1,35 +1,84 @@
-# Weather Dashboard
+# 🌤️ Weather Dashboard
 
-A Streamlit weather dashboard powered by the OpenWeatherMap API.
+A simple, interactive weather dashboard built with [Streamlit](https://streamlit.io) and the [OpenWeatherMap API](https://openweathermap.org/api).
 
-## Files
+Search any city to see current conditions, an hourly forecast for the next 24 hours, and a 5-day outlook.
 
-- `app.py` — the dashboard
-- `requirements.txt` — Python dependencies
-- `api-key.txt` — your OpenWeatherMap API key (just the raw key, nothing else). Kept out of git via `.gitignore`.
+## Features
 
-## Run locally
+- 🔍 City search with geocoding (handles multiple matches, e.g. Springfield, USA)
+- 🌡️ Current temperature, "feels like", humidity, and wind speed
+- 📈 Hourly temperature and precipitation-probability charts (next 24h)
+- 📅 5-day forecast with daily highs/lows and rain chance
+- 🔄 Toggle between °C and °F
 
-Make sure all three files are in the same folder, then:
+## Tech Stack
+
+- [Streamlit](https://streamlit.io) — UI framework
+- [OpenWeatherMap API](https://openweathermap.org/api) — weather & geocoding data
+- [pandas](https://pandas.pydata.org) — data handling for charts
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.9+
+- A free API key from [OpenWeatherMap](https://home.openweathermap.org/api_keys)
+
+### Installation
 
 ```bash
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+
+python3 -m venv venv
+source venv/bin/activate        # macOS/Linux
+venv\Scripts\activate           # Windows
+
 pip install -r requirements.txt
+```
+
+### Add your API key
+
+Create a file named `api-key.txt` in the project root containing just your key:
+
+```
+your_openweathermap_api_key_here
+```
+
+> ⚠️ `api-key.txt` is listed in `.gitignore` and should never be committed. Newly generated OpenWeatherMap keys can take up to a couple of hours to activate.
+
+### Run locally
+
+```bash
 streamlit run app.py
 ```
 
-## Deploy on Streamlit Community Cloud
+The app opens at `http://localhost:8501`.
 
-1. Push `app.py` and `requirements.txt` to a **public GitHub repo**. `.gitignore` excludes `api-key.txt` — don't commit it, since API keys should never be public.
-2. Go to https://share.streamlit.io and sign in with GitHub.
-3. Click **"Create app"** → **"Deploy a public app from GitHub"**.
-4. Select your repo, branch, and set the main file path to `app.py`.
-5. Since `api-key.txt` won't be in the repo, the deployed app needs another way to read the key. Easiest fix: in the Streamlit Cloud dashboard, go to **App settings → Secrets** and add:
+## Deploying to Streamlit Community Cloud
+
+1. Push `app.py`, `requirements.txt`, and `.gitignore` to a **public** GitHub repo (do **not** commit `api-key.txt`).
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+3. **Create app** → **Deploy a public app from GitHub** → select this repo/branch → set main file to `app.py`.
+4. In **App settings → Secrets**, add:
    ```
-   OWM_API_KEY = "your_key_here"
+   OWM_API_KEY = "your_openweathermap_api_key_here"
    ```
-   then change `load_api_key()` in `app.py` to read `st.secrets["OWM_API_KEY"]` instead of the file — reading a plain `.txt` file works great locally, but Streamlit Cloud's filesystem resets on each deploy, so a secrets-based key is more reliable there.
+5. Update `app.py` to read the key via `st.secrets["OWM_API_KEY"]` instead of `api-key.txt` (Streamlit Cloud's filesystem is ephemeral, so a local text file won't persist there).
 6. Click **Deploy**.
 
-## Note on your API key
+## Project Structure
 
-New OpenWeatherMap keys can take up to a couple of hours to activate — if you get 401 errors right after generating it, wait a bit and try again.
+```
+.
+├── app.py             # Main Streamlit app
+├── requirements.txt   # Python dependencies
+├── api-key.txt         # Your API key (gitignored, not committed)
+├── .gitignore
+└── README.md
+```
+
+## License
+
+MIT — feel free to use and modify.
